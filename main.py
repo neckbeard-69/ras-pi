@@ -1,10 +1,8 @@
 import RPi.GPIO as GPIO
 import time
-import smbus2
-import spidev  # For MCP3008 ADC (moisture sensor)
 import busio
 import board
-from adafruit_bme280 import basic as adafruit_bme280  # Updated import
+from adafruit_bme280 import basic as adafruit_bme280  # Updated import for BME280
 
 # GPIO Pin Setup
 GPIO.setmode(GPIO.BCM)
@@ -27,9 +25,7 @@ GPIO.setup(BUZZER_PIN, GPIO.OUT)  # Buzzer output
 
 # I2C Setup for BME280 (Temperature Sensor)
 i2c = busio.I2C(board.SCL, board.SDA)
-bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
-
-# SPI Setup for MCP3008 (Moisture Sensor) is no longer needed as we are using digital input
+bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)  # Initialize BME280 sensor
 
 # Function to sound the buzzer
 def buzz():
@@ -52,7 +48,7 @@ def ultrasonic_trigger():
         stop_time = time.time()
     
     elapsed_time = stop_time - start_time
-    distance = (elapsed_time * 34300) / 2
+    distance = (elapsed_time * 34300) / 2  # Calculate distance in cm
     return distance
 
 # Main loop
@@ -65,7 +61,7 @@ try:
             buzz()
         
         # PIR Sensor Alert
-        if GPIO.input(PIR_PIN):
+        if GPIO.input(PIR_PIN):  # HIGH means motion detected
             print("Motion detected!")
             buzz()
         
