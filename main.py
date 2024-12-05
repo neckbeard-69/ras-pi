@@ -1,8 +1,10 @@
 import RPi.GPIO as GPIO
 import time
 import smbus2
-import adafruit_bme280
 import spidev  # For MCP3008 ADC (moisture sensor)
+import busio
+import board
+from adafruit_bme280 import basic as adafruit_bme280  # Updated import
 
 # GPIO Pin Setup
 GPIO.setmode(GPIO.BCM)
@@ -24,8 +26,8 @@ GPIO.setup(MOISTURE_PIN, GPIO.IN)  # Digital input for moisture sensor
 GPIO.setup(BUZZER_PIN, GPIO.OUT)  # Buzzer output
 
 # I2C Setup for BME280 (Temperature Sensor)
-i2c_bus = smbus2.SMBus(1)  # 1 is the default I2C bus on the Pi
-bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c_bus)
+i2c = busio.I2C(board.SCL, board.SDA)
+bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
 
 # SPI Setup for MCP3008 (Moisture Sensor) is no longer needed as we are using digital input
 
