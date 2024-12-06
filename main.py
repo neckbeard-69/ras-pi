@@ -68,7 +68,7 @@ def detect_distance():
     pulse_duration = pulse_end - pulse_start
     distance = pulse_duration * 34300 / 2
     print(f"Distance: {distance:.2f} cm")
-    if distance > 30:
+    if distance > 20:
         buzz(DISTANCE_FREQ)
         print("High distance")
 
