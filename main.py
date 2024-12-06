@@ -40,9 +40,8 @@ def detect_gas():
 
 def detect_distance():
     GPIO.output(TRIGGER_PIN, GPIO.HIGH)
-    time.sleep(PULSE)  
+    time.sleep(PULSE)
     GPIO.output(TRIGGER_PIN, GPIO.LOW)
-
     while GPIO.input(ECHO_PIN) == 0:
         pulse_start = time.time()
 
@@ -50,10 +49,10 @@ def detect_distance():
         pulse_end = time.time()
 
     pulse_duration = pulse_end - pulse_start
-    distance = pulse_duration * 34300 / 2 
+    distance = pulse_duration * 34300 / 2
+    print(f"Distance: {distance:.2f} cm")
     if distance > 30:
-        print("high distance")
-
+        print("High distance")
 
 try:
     while True:
