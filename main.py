@@ -14,6 +14,7 @@ ECHO_PIN = 6
 GPIO.setup(GAS_PIN, GPIO.IN)
 GPIO.setup(PIR_PIN, GPIO.IN)
 GPIO.setup(ECHO_PIN, GPIO.IN)
+GPIO.setup(TRIGGER_PIN, GPIO.OUT)
 
 def detect_motion():
     pir_value = GPIO.input(PIR_PIN)
