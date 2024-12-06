@@ -39,7 +39,7 @@ def detect_motion():
 def detect_temp_humidity():
     humidity, temp = Adafruit_DHT.read(sensor, TEMP_HUMIDITY_PIN)
 
-    if  temp >= 50:
+    if temp is not None and temp >= 50:
         print("temp is greator than 50")
         buzz(TEMP_FREQ)
     if humidity is not None:
