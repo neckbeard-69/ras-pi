@@ -45,7 +45,6 @@ def detect_temp_humidity():
     if humidity is not None:
         print("himidity is detected")
         buzz(HUMIDITY_FREQ)
-    print("Failed to retrieve data from the DHT11 sensor.")
 
 def detect_gas():
     gas_present = GPIO.input(GAS_PIN)
