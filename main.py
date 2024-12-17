@@ -46,7 +46,7 @@ def detect_motion():
         if GPIO.input(PIR_PIN) == GPIO.HIGH:
             print("Motion detected")
             buzz(MOTION_BUZZ_PIN, MOTION_FREQ)
-        time.sleep(0.1)  # Avoid rapid buzzing
+        time.sleep(0.1)  
 
 def detect_gas():
     while True:
