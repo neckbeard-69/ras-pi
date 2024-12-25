@@ -5,30 +5,35 @@ import threading
 
 GPIO.setmode(GPIO.BCM)
 
+# Sensors
 sensor = Adafruit_DHT.DHT11
-
 PULSE = 0.00001  # 10 microseconds
 GAS_PIN = 18
 TEMP_HUMIDITY_PIN = 23
 PIR_PIN = 12
 TRIGGER_PIN = 5
 ECHO_PIN = 6
+IR_SENSOR_PIN = 20  
 
+# Buzzers
 DISTANCE_BUZZ_PIN = 22
 GAS_BUZZ_PIN = 17
 MOTION_BUZZ_PIN = 27
 TEMP_HUMIDITY_BUZZ_PIN = 4
 
+# Frequencies
 GAS_FREQ = 300
 DISTANCE_FREQ = 500
 MOTION_FREQ = 700
 TEMP_FREQ = 1000
 HUMIDITY_FREQ = 1500 
 
+# GPIO Setup
 GPIO.setup(GAS_PIN, GPIO.IN)
 GPIO.setup(PIR_PIN, GPIO.IN)
 GPIO.setup(ECHO_PIN, GPIO.IN)
 GPIO.setup(TRIGGER_PIN, GPIO.OUT)
+GPIO.setup(IR_SENSOR_PIN, GPIO.IN)
 
 GPIO.setup(DISTANCE_BUZZ_PIN, GPIO.OUT)
 GPIO.setup(GAS_BUZZ_PIN, GPIO.OUT)
@@ -77,35 +82,41 @@ def detect_distance():
             print("High distance")
         time.sleep(0.5)
 
-def detect_temp_humidity():
+def detect_humidity():
     while True:
-        humidity, temp = Adafruit_DHT.read(sensor, TEMP_HUMIDITY_PIN)
-        
-        if temp is not None and temp >= 50:
-            print("Temperature is greater than 50°C")
-            buzz(TEMP_HUMIDITY_BUZZ_PIN, TEMP_FREQ)
+        humidity, _ = Adafruit_DHT.read(sensor, TEMP_HUMIDITY_PIN)
         
         if humidity is not None:
-            print("Humidity detected")
+            print(f"Humidity: {humidity:.2f}%")
             buzz(TEMP_HUMIDITY_BUZZ_PIN, HUMIDITY_FREQ)
         
-        time.sleep(2) 
+        time.sleep(2)
+
+def detect_fire():
+    while True:
+        if GPIO.input(IR_SENSOR_PIN) == GPIO.HIGH:
+            print("Fire detected")
+            buzz(TEMP_HUMIDITY_BUZZ_PIN, TEMP_FREQ)
+        time.sleep(0.1)
 
 try:
     motion_thread = threading.Thread(target=detect_motion)
     gas_thread = threading.Thread(target=detect_gas)
     distance_thread = threading.Thread(target=detect_distance)
-    temp_humidity_thread = threading.Thread(target=detect_temp_humidity)
+    humidity_thread = threading.Thread(target=detect_humidity)
+    fire_thread = threading.Thread(target=detect_fire)
 
     motion_thread.start()
     gas_thread.start()
     distance_thread.start()
-    temp_humidity_thread.start()
+    humidity_thread.start()
+    fire_thread.start()
 
     motion_thread.join()
     gas_thread.join()
     distance_thread.join()
-    temp_humidity_thread.join()
+    humidity_thread.join()
+    fire_thread.join()
 
 except KeyboardInterrupt:
     print("Exiting program...")
